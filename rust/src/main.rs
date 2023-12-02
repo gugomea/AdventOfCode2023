@@ -1,4 +1,5 @@
-use rust::day1;
+//use rust::day1::solve;
+use rust::day2::solve;
 fn main() {
-    day1::solve();
+    solve();
 }
