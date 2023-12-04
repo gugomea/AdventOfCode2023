@@ -71,13 +71,10 @@ defmodule Parser do
     ]
 
     values =
-      for {k, v} <- letters do
-        if func.(line, k) do
-          v
-        end
-      end
+      Enum.filter(letters, fn {k, _} -> func.(line, k) end)
+      |> Enum.map(fn {_, v} -> v end)
 
-    case values |> Enum.filter(fn val -> val != nil end) do
+    case values do
       [] -> parse(func, interval, String.slice(line, interval))
       [hd | _] -> hd
     end
@@ -96,7 +93,7 @@ end
 <!-- livebook:{"output":true} -->
 
 ```
-{:module, Parser, <<70, 79, 82, 49, 0, 0, 12, ...>>, {:last, 1}}
+{:module, Parser, <<70, 79, 82, 49, 0, 0, 11, ...>>, {:last, 1}}
 ```
 
 ```elixir
