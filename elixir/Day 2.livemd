@@ -1,0 +1,74 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# Day 2
+
+## Part 1
+
+```elixir
+defmodule Day2 do
+  def accept_cube(lists) do
+    Enum.map(lists, fn list ->
+      case list do
+        [n, "red"] -> {String.to_integer(n), 0, 0}
+        [n, "green"] -> {0, String.to_integer(n), 0}
+        [n, "blue"] -> {0, 0, String.to_integer(n)}
+      end
+    end)
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Day2, <<70, 79, 82, 49, 0, 0, 8, ...>>, {:accept_cube, 1}}
+```
+
+```elixir
+lines = String.split(File.read!("../input/day2.txt"), "\n", trim: true)
+
+lines
+|> Enum.map(&String.slice(&1, 8..-1))
+|> Enum.map(&String.replace(&1, [",", ";", ":"], " "))
+|> Enum.map(&String.split(&1, " ", trim: true))
+|> Enum.map(&Enum.chunk_every(&1, 2))
+|> Enum.map(&Day2.accept_cube/1)
+|> Enum.with_index()
+|> Enum.filter(fn {tuplas, _} ->
+  !Enum.any?(tuplas, fn {r, g, b} -> r > 12 || g > 13 || b > 14 end)
+end)
+|> Enum.map(fn {_, n} -> n + 1 end)
+|> Enum.sum()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+2720
+```
+
+## Part 2
+
+```elixir
+lines =
+  String.split(File.read!("../input/day2.txt"), "\n", trim: true)
+  |> Enum.map(&String.slice(&1, 8..-1))
+  |> Enum.map(&String.replace(&1, [",", ";", ":"], " "))
+  |> Enum.map(&String.split(&1, " ", trim: true))
+  |> Enum.map(&Enum.chunk_every(&1, 2))
+  |> Enum.map(&Day2.accept_cube/1)
+  |> Enum.with_index()
+  |> Enum.map(fn {cubes, _} ->
+    {r, _, _} = Enum.max_by(cubes, fn {r, _, _} -> r end)
+    {_, g, _} = Enum.max_by(cubes, fn {_, g, _} -> g end)
+    {_, _, b} = Enum.max_by(cubes, fn {_, _, b} -> b end)
+    r * g * b
+  end)
+  |> Enum.sum()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+71535
+```
