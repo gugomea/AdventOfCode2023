@@ -48,7 +48,7 @@ fn parse(color: &str, origin: &[&str]) -> usize {
 }
 
 fn part1() {
-    let file = fs::read_to_string("./src/day2/input.txt").unwrap();
+    let file = fs::read_to_string("../input/day2.txt").unwrap();
     let maximum = (12, 13, 14);
     let solution = file.lines()
         .enumerate()
@@ -58,7 +58,7 @@ fn part1() {
 }
 
 fn part2() {
-    let file = fs::read_to_string("./src/day2/input.txt").unwrap();
+    let file = fs::read_to_string("../input/day2.txt").unwrap();
     let solution  = file.lines()
         .enumerate()
         .map(|x| Game::from(x).max())

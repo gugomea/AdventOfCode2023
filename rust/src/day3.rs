@@ -63,7 +63,7 @@ pub fn solve() {
 }
 
 fn part1() {
-    let file = "./src/day3/input.txt";
+    let file = "../input/day3.txt";
     let grid = Grid::from_file(file);
     let sum = grid.chars.iter().enumerate().map(|(i, x)|{
         x.into_iter().enumerate()
@@ -75,7 +75,7 @@ fn part1() {
 }
 
 fn part2() {
-    let file = "./src/day3/input.txt";
+    let file = "../input/day3.txt";
     let grid = Grid::from_file(file);
     let sum = grid.chars.iter().enumerate().map(|(i, x)|{
         x.into_iter().enumerate()

@@ -1,0 +1,121 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# Day 1
+
+## Part 1
+
+```elixir
+defmodule Day1 do
+  def first_number(list) do
+    Enum.map(list, &Integer.parse/1)
+    |> Enum.find(fn n -> n != :error end)
+    |> elem(0)
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Day1, <<70, 79, 82, 49, 0, 0, 7, ...>>, {:first_number, 1}}
+```
+
+```elixir
+lines = String.split(File.read!("../input/day1.txt"), "\n", trim: true)
+
+firsts =
+  Enum.map(lines, &String.codepoints/1)
+  |> Enum.map(&Day1.first_number/1)
+  |> Enum.map(fn n -> n * 10 end)
+  |> Enum.sum()
+
+lasts =
+  Enum.map(lines, &String.codepoints/1)
+  |> Enum.map(&Enum.reverse/1)
+  |> Enum.map(&Day1.first_number/1)
+  |> Enum.sum()
+
+firsts + lasts
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+55621
+```
+
+## Part 2
+
+```elixir
+defmodule Parser do
+  def parse(func, interval, line) do
+    letters = [
+      {"1", 1},
+      {"2", 2},
+      {"3", 3},
+      {"4", 4},
+      {"5", 5},
+      {"6", 6},
+      {"7", 7},
+      {"8", 8},
+      {"9", 9},
+      {"one", 1},
+      {"two", 2},
+      {"three", 3},
+      {"four", 4},
+      {"five", 5},
+      {"six", 6},
+      {"seven", 7},
+      {"eight", 8},
+      {"nine", 9}
+    ]
+
+    values =
+      for {k, v} <- letters do
+        if func.(line, k) do
+          v
+        end
+      end
+
+    case values |> Enum.filter(fn val -> val != nil end) do
+      [] -> parse(func, interval, String.slice(line, interval))
+      [hd | _] -> hd
+    end
+  end
+
+  def first(string) do
+    parse(&String.starts_with?/2, 1..-1, string)
+  end
+
+  def last(string) do
+    parse(&String.ends_with?/2, 0..-2, string)
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Parser, <<70, 79, 82, 49, 0, 0, 12, ...>>, {:last, 1}}
+```
+
+```elixir
+lines = String.split(File.read!("../input/day1.txt"), "\n", trim: true)
+
+first =
+  Enum.map(lines, &Parser.first/1)
+  |> Enum.map(fn n -> n * 10 end)
+  |> Enum.sum()
+
+last =
+  Enum.map(lines, &Parser.last/1)
+  |> Enum.sum()
+
+first + last
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+53592
+```

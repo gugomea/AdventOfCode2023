@@ -1,20 +1,20 @@
 use std::fs;
 pub fn solve() {
     part1();
-    part2()
+    part2();
 }
 
 fn part1() {
-    let fich = fs::read_to_string("./src/day1/input.txt").unwrap();
+    let fich = fs::read_to_string("../input/day1.txt").unwrap();
     let firsts = fich.lines().map(|l| l.chars().find_map(|c| c.to_digit(10)).unwrap());
     let lasts = fich.lines().map(|l| l.chars().rev().find_map(|c| c.to_digit(10)).unwrap());
     let f_sum = firsts.map(|x| x * 10).sum::<u32>();
     let l_sum = lasts.sum::<u32>();
-    println!("{:?}", f_sum + l_sum);
+    //println!("{:?}", f_sum + l_sum);
 }
 
 fn part2() {
-    let fich = fs::read_to_string("./src/day1/input.txt").unwrap();
+    let fich = fs::read_to_string("../input/day1.txt").unwrap();
     let fich = fich
         .replace("one", "o1e")
         .replace("two", "t2o")
@@ -29,5 +29,5 @@ fn part2() {
     let lasts = fich.lines().map(|l| l.chars().rev().find_map(|c| c.to_digit(10)).unwrap());
     let f_sum = firsts.map(|x| x * 10).sum::<u32>();
     let l_sum = lasts.sum::<u32>();
-    println!("{:?}", f_sum + l_sum);
+    //println!("{:?}", f_sum + l_sum);
 }
