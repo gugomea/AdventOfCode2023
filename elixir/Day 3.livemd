@@ -2,7 +2,7 @@
 
 # Day 3
 
-## Part 1
+## Module
 
 ```elixir
 defmodule Day3 do
@@ -16,27 +16,20 @@ defmodule Day3 do
       |> Enum.filter(fn {val, _} -> !Enum.any?(nonsense, fn ch -> ch == val end) end)
       |> Enum.map(fn {_, idx} -> idx end)
 
-    upper =
-      characters
-      |> Enum.map(&String.split_at(upper, &1))
-      |> Enum.map(fn {l, r} -> {l, String.at(r, 0), String.slice(r, 1..-1)} end)
-      |> Enum.map(&Day3.parse_chunks/1)
-
-    middle =
-      characters
-      |> Enum.map(&String.split_at(middle, &1))
-      |> Enum.map(fn {l, r} -> {l, String.at(r, 0), String.slice(r, 1..-1)} end)
-      |> Enum.map(&Day3.parse_chunks/1)
-
-    lower =
-      characters
-      |> Enum.map(&String.split_at(lower, &1))
-      |> Enum.map(fn {l, r} -> {l, String.at(r, 0), String.slice(r, 1..-1)} end)
-      |> Enum.map(&Day3.parse_chunks/1)
+    upper = process_line(characters, upper)
+    middle = process_line(characters, middle)
+    lower = process_line(characters, lower)
 
     Enum.zip([upper, middle, lower])
     |> Enum.map(&Tuple.to_list/1)
     |> Enum.map(&Enum.flat_map(&1, fn x -> x end))
+  end
+
+  def process_line(characters, line) do
+    characters
+    |> Enum.map(&String.split_at(line, &1))
+    |> Enum.map(fn {l, r} -> {l, String.at(r, 0), String.slice(r, 1..-1)} end)
+    |> Enum.map(&Day3.parse_chunks/1)
   end
 
   def parse_chunks({l, m, r}) do
@@ -69,8 +62,10 @@ end
 <!-- livebook:{"output":true} -->
 
 ```
-{:module, Day3, <<70, 79, 82, 49, 0, 0, 22, ...>>, {:parse, 1}}
+{:module, Day3, <<70, 79, 82, 49, 0, 0, 20, ...>>, {:parse, 1}}
 ```
+
+## Part 1
 
 ```elixir
 File.read!("../input/day3.txt")
