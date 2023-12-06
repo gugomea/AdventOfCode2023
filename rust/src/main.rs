@@ -1,3 +1,12 @@
-use rust::day5::solve;
+use std::time::Instant;
 
-fn main() { solve() }
+use rust::day6::solve;
+
+fn main() { 
+    let instant = Instant::now();
+    solve();
+    let elapsed = instant.elapsed();
+    println!("=============");
+    println!("{:?}", elapsed);
+    println!("=============");
+}
