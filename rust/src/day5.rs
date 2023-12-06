@@ -67,7 +67,8 @@ fn partition_intervals(start: usize, end: usize, ranges: &Vec<(usize, usize, usi
         if i < ranges.len() -1 {
             let this_end = ranges[i].1 + ranges[i].2 - 1;
             let next_start = ranges[i+1].1;
-            //there is a whole between intervals
+            //there is a hole between intervals
+            //so we fill it with identity map
             if this_end + 1 != next_start {
                 let this_end = usize::max(start, this_end + 1);
                 let this_end_end = usize::min(end, next_start - 1);
