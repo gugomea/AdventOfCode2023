@@ -1,0 +1,96 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# Day4
+
+## Part 1
+
+```elixir
+defmodule Day4 do
+  def parse_cards(cards) do
+    cards
+    |> String.split("|")
+    |> Enum.map(&Enum.map(String.split(&1, " ", trim: true), fn x -> String.to_integer(x) end))
+  end
+
+  def winning_numbers(card) do
+    [winning, normal] = card
+
+    n =
+      normal
+      |> Enum.map(fn card ->
+        Enum.any?(winning, fn win -> win == card end)
+      end)
+      |> Enum.count(fn x -> x end)
+
+    n
+  end
+
+  def winning_rec(cards, values) do
+    values
+    |> Enum.with_index()
+    |> Enum.map(fn {val, idx} ->
+      1 + calculate_rec(cards, idx, val)
+    end)
+  end
+
+  def calculate_rec(calculated_cards, from, value) do
+    case value do
+      0 ->
+        0
+
+      _ ->
+        1..value
+        |> Enum.map(fn x ->
+          1 + calculate_rec(calculated_cards, from + x, Enum.at(calculated_cards, from + x))
+        end)
+        |> Enum.sum()
+    end
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Day4, <<70, 79, 82, 49, 0, 0, 15, ...>>, {:calculate_rec, 3}}
+```
+
+```elixir
+file = File.read!("../input/day4.txt")
+
+file
+|> String.split("\n", trim: true)
+|> Enum.map(&Regex.replace(~r/Card +[0-9]+:/, &1, ""))
+|> Enum.map(&Day4.parse_cards/1)
+|> Enum.map(&Day4.winning_numbers/1)
+|> Enum.map(&Bitwise.<<<(1, &1 - 1))
+|> Enum.sum()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+25010
+```
+
+## Part 2
+
+```elixir
+file = File.read!("../input/day4.txt")
+
+calculated_cards =
+  file
+  |> String.split("\n", trim: true)
+  |> Enum.map(&Regex.replace(~r/Card +[0-9]+:/, &1, ""))
+  |> Enum.map(&Day4.parse_cards/1)
+  |> Enum.map(&Day4.winning_numbers/1)
+
+Day4.winning_rec(calculated_cards, calculated_cards)
+|> Enum.sum()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+9924412
+```
