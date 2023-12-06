@@ -10,7 +10,7 @@ fn part1() {
     let lasts = fich.lines().map(|l| l.chars().rev().find_map(|c| c.to_digit(10)).unwrap());
     let f_sum = firsts.map(|x| x * 10).sum::<u32>();
     let l_sum = lasts.sum::<u32>();
-    //println!("{:?}", f_sum + l_sum);
+    println!("{:?}", f_sum + l_sum);
 }
 
 fn part2() {
@@ -29,5 +29,5 @@ fn part2() {
     let lasts = fich.lines().map(|l| l.chars().rev().find_map(|c| c.to_digit(10)).unwrap());
     let f_sum = firsts.map(|x| x * 10).sum::<u32>();
     let l_sum = lasts.sum::<u32>();
-    //println!("{:?}", f_sum + l_sum);
+    println!("{:?}", f_sum + l_sum);
 }

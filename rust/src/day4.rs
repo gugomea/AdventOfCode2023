@@ -1,24 +1,21 @@
 use std::fs;
-use std::error::Error;
 
-pub fn solve() -> Result<(), Box<dyn Error>>{
-    part1()?;
-    part2()?;
-    Ok(())
+pub fn solve() {
+    part1();
+    part2();
 }
 
-fn part1() -> Result<(), Box<dyn Error>> {
-    let fichero = fs::read_to_string("../input/day4.txt")?;
+fn part1() {
+    let fichero = fs::read_to_string("../input/day4.txt").unwrap();
     let wining_numbers = fichero.lines()
         .enumerate()
         .map(|(i, x)| Card::parse_card(i, x).calculate())
         .sum::<usize>();
     println!("{}", wining_numbers);
-    Ok(())
 }
 
-fn part2() -> Result<(), Box<dyn Error>> {
-    let fichero = fs::read_to_string("../input/day4.txt")?;
+fn part2() {
+    let fichero = fs::read_to_string("../input/day4.txt").unwrap();
     let cards = fichero.lines().enumerate()
         .map(|(i, x)| Card::parse_card(i, x))
         .collect::<Vec<_>>();
@@ -32,7 +29,6 @@ fn part2() -> Result<(), Box<dyn Error>> {
 
     let n = counts.iter().sum::<usize>();
     println!("{}", n);
-    Ok(())
 }
 
 fn proceso_recursivo(cards: &[Card], card_id: usize, counts: &mut [usize]){
