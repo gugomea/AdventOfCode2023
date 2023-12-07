@@ -9,7 +9,7 @@ pub fn solve() {
 fn part1() {
     // the only card that is not in ascii order is J, so I replace it with R, with follows that
     // order, so I don't have to create an Enum.
-    let file = fs::read_to_string("../input/day7.txt").unwrap().replace("J", "R");
+    let file = fs::read_to_string("../input/day7.txt").unwrap();
     let mut hands = file.lines()
         .map(|x| Hand::parse_hand(x, true))
         .collect::<Vec<_>>();
@@ -24,9 +24,7 @@ fn part1() {
 }
 
 fn part2() {
-    //Since the jocker is going to be the worst card, when sorting we want it to be "0" 
-    //or less(I picked "0").
-    let file = fs::read_to_string("../input/day7.txt").unwrap().replace("J", "0");
+    let file = fs::read_to_string("../input/day7.txt").unwrap().replace("J", "Ñ");
     let mut hands = file.lines()
         .map(|x| Hand::parse_hand(x, false))
         .collect::<Vec<_>>();
@@ -39,7 +37,7 @@ fn part2() {
     println!("{}", total);
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 struct Hand {
     cards: Cards,
     bid: usize,
@@ -48,47 +46,24 @@ struct Hand {
 impl Hand {
 
     fn parse_hand(input: &str, part1: bool) -> Self {
-        let mut split = input.split(" ");
+        let (c, b)  = input.split_once(' ').unwrap();
         let (cards, bid) = (
-            Cards::new(split.next().unwrap().chars().collect(), part1),
-            split.next().unwrap().parse::<usize>().unwrap());
+            Cards::new(c.chars().map(Card::from_ch).collect(), part1),
+            b.parse().unwrap());
 
         Self { cards, bid }
     }
 }
 
-impl PartialEq for Hand {
-
-    fn eq(&self, other: &Self) -> bool {
-        self.cards == other.cards
-    }
-}
-
-impl Eq for Hand {}
-
-impl PartialOrd for Hand {
-
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        self.cards.partial_cmp(&other.cards)
-    }
-}
-
-impl Ord for Hand{
-
-    fn cmp(&self, other: &Self) -> Ordering {
-        self.partial_cmp(other).unwrap()
-    }
-}
-
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 struct Cards {
-    values: Vec<char>,
     typ: usize,
+    values: Vec<Card>,
 }
 
 impl Cards {
 
-    fn new(values: Vec<char>, part1: bool) -> Self {
+    fn new(values: Vec<Card>, part1: bool) -> Self {
         let mut c = values.clone();
         //sort by the number of occurences
         c.sort_by(|a, b| {
@@ -102,10 +77,10 @@ impl Cards {
 
 
         if !part1 {
-            let better = c.iter().find(|&&x| x != '0').copied().unwrap_or('A');
+            let better = c.iter().find(|&&x| x != Card::Joker).copied().unwrap_or(Card::A);
 
             for i in 0..values.len() {
-                if c[i] == '0' { c[i] = better; }
+                if c[i] == Card::Joker { c[i] = better; }
             }
 
 
@@ -135,44 +110,31 @@ impl Cards {
     }
 }
 
-impl PartialEq for Cards {
-
-    fn eq(&self, other: &Self) -> bool {
-        self.typ == other.typ && self.values == other.values
-    }
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
+enum Card {
+    Joker,
+    Two, Three, Four, Five, Six, Seven, Eight, Nine,
+    T, J, Q, K, A,
 }
 
-impl Eq for Cards {}
-
-impl PartialOrd for Cards {
-
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        // if the type is already different we don't event have 
-        // to check for the cards
-        if other.typ != self.typ {
-            return Some(self.typ.cmp(&other.typ))
-        } else {
-            for (c1, c2) in std::iter::zip(&self.values, &other.values) {
-                // if different cards:
-                //    [ ] If both are letters we compare lexigographically
-                //    [ ] If one of them is number, then the unicode value gives the propper ordering
-                // else:
-                //    [ ] Keep searching for different card
-                match (c1 != c2, !c1.is_digit(10) && !c2.is_digit(10)) {
-                    (true, true) => return c2.partial_cmp(&c1),
-                    (true, _) => return c1.partial_cmp(&c2),
-                    _ => continue,
-                }
-            }
-            return None;
+impl Card {
+    fn from_ch(ch: char) -> Self {
+        match ch {
+            '2' => Card::Two,
+            '3' => Card::Three,
+            '4' => Card::Four,
+            '5' => Card::Five,
+            '6' => Card::Six,
+            '7' => Card::Seven,
+            '8' => Card::Eight,
+            '9' => Card::Nine,
+            'T' => Card::T,
+            'J' => Card::J,
+            'K' => Card::K,
+            'Q' => Card::Q,
+            'A' => Card::A,
+            'Ñ' => Card::Joker,
+            ch => panic!("{}", ch),
         }
     }
 }
-
-impl Ord for Cards {
-
-    fn cmp(&self, other: &Self) -> Ordering {
-        self.partial_cmp(other).unwrap()
-    }
-}
-
