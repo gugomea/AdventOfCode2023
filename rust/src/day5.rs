@@ -29,7 +29,7 @@ fn part1() {
         let aux = calculate_range_seed((seed, seed), &maps, 0);
         if aux < min { min = aux; }
     }
-    println!("{}", min);
+    //println!("{}", min);
 }
 
 fn part2() {
@@ -42,7 +42,7 @@ fn part2() {
             if next < min { min = next; }
         }
     }
-    println!("{}", min);
+    //println!("{}", min);
 }
 
 fn calculate_range_seed((start, end): (usize, usize), remaining_maps: &[Vec<(usize, usize, usize)>], i: usize) -> usize {

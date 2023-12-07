@@ -1,6 +1,6 @@
 use std::time::Instant;
 
-use rust::day6::solve;
+use rust::day7::solve;
 
 fn main() { 
     let instant = Instant::now();
