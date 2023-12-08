@@ -1,0 +1,12 @@
+pub fn solve() {
+    part1();
+}
+
+fn part1() {
+
+}
+
+macro_rules! power {
+}
+
+power!()
