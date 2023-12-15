@@ -49,10 +49,8 @@ fn dfs(i: i64, j: i64, v: &mut Vec<Vec<usize>>) {
 
 fn follow_path(matrix: &mut Vec<Vec<[(i64, i64); 2]>>, grid: &mut Vec<Vec<usize>>, i: i64, j: i64, value: usize, flag: bool) {
     let [d1, d2] = matrix[i as usize][j as usize];
-    let [aux_d1, aux_d2] = matrix[i as usize][j as usize];
     let [d1, d2] = [(i + d1.0, j + d1.1), (i + d2.0, j + d2.1)];
     let expected = value + 1;
-    //println!("value: {}", value);
     if grid[d1.0 as usize][d1.1 as usize] == expected {
 
         let mut direccion = (d1.1 - j, d1.0 - i);
@@ -64,13 +62,9 @@ fn follow_path(matrix: &mut Vec<Vec<[(i64, i64); 2]>>, grid: &mut Vec<Vec<usize>
         }
 
         let (i, j) = (i + direccion.0, j + direccion.1);
-        //println!("estando en {}, me meto a ({}, {})", value, i, j);
         dfs(i, j, grid);
         let (i, j) = (d1.0 + direccion.0, d1.1 + direccion.1);
         dfs(i, j, grid);
-        //for r in grid.iter() {
-            //println!("{:?}", r);
-        //}
         follow_path(matrix, grid, d1.0, d1.1, expected, flag);
     } else if grid[d2.0 as usize][d2.1 as usize] == expected {
         let mut direccion = (d2.1 - j, d2.0 - i);
@@ -82,13 +76,9 @@ fn follow_path(matrix: &mut Vec<Vec<[(i64, i64); 2]>>, grid: &mut Vec<Vec<usize>
         }
 
         let (i, j) = (i + direccion.0, j + direccion.1);
-        //println!("estando en {}, me meto a ({}, {})", value, i, j);
         dfs(i, j, grid);
         let (i, j) = (d2.0 + direccion.0, d2.1 + direccion.1);
         dfs(i, j, grid);
-        //for r in grid.iter() {
-            //println!("{:?}", r);
-        //}
         follow_path(matrix, grid, d2.0, d2.1, expected, flag);
 
     } else {}
@@ -97,7 +87,6 @@ fn follow_path(matrix: &mut Vec<Vec<[(i64, i64); 2]>>, grid: &mut Vec<Vec<usize>
 fn part1() {
 
     let file = fs::read_to_string("../input/day10.txt").unwrap();
-    //let file = fs::read_to_string("../input/test.txt").unwrap();
     let (mut s_i, mut s_j) = (0, 0);
     let mut grid = file.lines().enumerate().map(|(i, line)| {
         line.chars().enumerate().map(|(j, ch)| {
@@ -121,41 +110,13 @@ fn part1() {
 
     let initial = [(1, 0), (0, 1)];
     let given = [(-1, 0), (0, -1)];
-
-    //let initial = [(1, 0), (0, -1)];
-    //let given = [(-1, 0), (0, 1)];
     grid[s_i as usize][s_j as usize] = initial;
     bfs(given, s_i, s_j, &mut matrix, &mut grid, &mut visited);
-
-    for row in matrix.clone() {
-        println!("{:?}", row);
-    }
-
-    println!("===========================");
-    println!("===========================");
 
     follow_path(&mut grid, &mut matrix, s_i + initial[0].0, s_j + initial[0].1, 1, false);
     follow_path(&mut grid, &mut matrix, s_i + initial[1].0, s_j + initial[1].1, 1, true);
 
     matrix[s_i as usize][s_j as usize] = 0;
-
-    for (i, row) in matrix.clone().into_iter().enumerate() {
-        for (j, element) in row.clone().into_iter().enumerate() {
-            if i == s_i as usize && j == s_j as usize {
-                print!("S");
-                continue;
-            }
-            if element == 0 {
-                print!(".");
-            } else if element != usize::MAX {
-                let p: char = '\u{2588}';
-                print!("{}", p);
-            } else { 
-                print!("I");
-            }
-        }
-        println!();
-    }
 
     println!("{}", matrix.into_iter().map(|line| line
             .into_iter()
